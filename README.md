@@ -49,6 +49,8 @@ My approach to modeling is to start off with a RandomForest model:
 
 I did some hyperparameter tuning. I don't expect big differences in performance, but it's good to get an impression of how much improvement can be made by tuning.
 
+The resulting random forest model performance was far from great. Below I provide some ideas for improvement but in the end the right choices are highly dependent on the case.
+
 #### Data split
 
 The data was split randomly. It might be worthwhile to stratify on highly imbalanced features such as channel and possibly hour to ensure comparable distributions in all sets.
