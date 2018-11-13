@@ -20,6 +20,10 @@ RANDOM_SEED = 1234
 logging.info("Start reading data")
 dat = pd.read_csv(INPUT_FILENAME)
 logging.info("End reading data")
+
+# for now: take a sample just to speed things up a bit...
+dat = dat.sample(1000000, random_state=RANDOM_SEED)
+
 feature_names = dat.columns.values[1:]
 
 # define X and Y (features and labels)
@@ -58,7 +62,6 @@ del dat, X, y, X_tmp, y_tmp
 # logging.info(grid_search.best_score_)
 #
 # best_model = grid_search.best_estimator_
-# joblib.dump(best_model, './models/random_forest.joblib')
 
 
 
@@ -78,8 +81,8 @@ def evaluate_model(clf, X, y_true):
 
 logging.info("Start training models")
 param_grid = ParameterGrid({
-    'n_estimators': [100, 200],
-    'max_depth': [10, 20]
+    'n_estimators': [50, 100],
+    'max_depth': [8, 12]
 })
 model_data = []
 for config in param_grid:
@@ -100,22 +103,24 @@ for config in param_grid:
     })
 
 
-idx = 1
-best_model = model_data[1]['model']
+# save the best model
+idx = 0
+best_model = model_data[idx]['model']
+joblib.dump(best_model, './models/random_forest.joblib')
+
+# show feature importance
+imp = pd.DataFrame(list(zip(feature_names, best_model.feature_importances_)), columns=['feature', 'importance'])
+print(imp.sort_values(by='importance', ascending=False)[0:20])
 
 #
 # Evaluate the model on the test set
 #
+y_hat_proba = best_model.predict_proba(X_test)[:, 1]
+y_hat_pred = best_model.predict(X_test)
 
-
-
-imp = pd.DataFrame(list(zip(feature_names, best_model.feature_importances_)), columns=['feature', 'importance'])
-imp.sort_values(by='importance', ascending=False)[0:20]
-
-
-y_hat = best_model.predict_proba(X_test)[:, 1]
-logging.info("AUROC score: {}".format(roc_auc_score(y_test, y_hat)))
-logging.info("AUPRC score: {}".format(average_precision_score(y_test, y_hat)))
-logging.info("Accuracy: {}".format(accuracy_score(y_test, y_hat)))
+logging.info("AUROC score: {}".format(roc_auc_score(y_test, y_hat_proba)))
+logging.info("AUPRC score: {}".format(average_precision_score(y_test, y_hat_proba)))
+logging.info("Accuracy: {}".format(accuracy_score(y_test, y_hat_pred)))
 logging.info("Confusion matrix:")
-logging.info(confusion_matrix(y_test, y_hat))
+logging.info(confusion_matrix(y_test, y_hat_pred))
+
