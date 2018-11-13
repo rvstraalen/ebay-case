@@ -1,0 +1,7 @@
+name: ebaycase
+
+dependencies:
+  - python=3.6
+  - numpy=1.15.*
+  - pandas=0.23.*
+  - scikit-learn=0.20.*

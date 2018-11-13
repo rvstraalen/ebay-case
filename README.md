@@ -5,8 +5,9 @@ Ad click prediction demo case
 
 ### Guide to run the scripts
 
-* Create python 3.6 environment
-* Install requirements `pip install -r requirements.txt`
+* Create python 3.6 environment and install requirements
+  * Anaconda: `conda env create -f environment.yml`
+  * Otherwise: `pip install -r requirements.txt`
 * `python src/preprocessing.py`
 * `python src/train.py`
 
