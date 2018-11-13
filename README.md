@@ -5,9 +5,11 @@ Ad click prediction demo case
 
 ### Guide to run the scripts
 
+* Clone the repository: `git clone https://github.com/rvstraalen/ebay-case.git`
 * Create python 3.6 environment and install requirements
   * Anaconda: `conda env create -f environment.yml`
   * Otherwise: `pip install -r requirements.txt`
+* put the raw data (unpacked csv) in the ./data/raw directory
 * `python src/preprocessing.py`
 * `python src/train.py`
 
